@@ -32,6 +32,11 @@ export function AdministrativeProcedures() {
     setLastAddedProcedure(null);
   };
 
+  const handleOpenApprovalQueue = () => {
+    console.log('Opening approval queue...');
+    // TODO: Implement approval queue modal or navigation
+  };
+
   if (currentView === 'form') {
     return (
       <ProcedureFormView 
@@ -65,6 +70,7 @@ export function AdministrativeProcedures() {
       <ProceduresTabs 
         section="procedures-catalog" 
         onAddProcedure={() => setCurrentView('form')}
+        onOpenApprovalQueue={handleOpenApprovalQueue}
       />
       
       <ProcedureSummaryModal

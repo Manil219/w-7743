@@ -50,18 +50,19 @@ function Index() {
         <MainHeader 
           language={language} 
           onLanguageChange={setLanguage}
+          activeSection={currentSection}
+          onSectionChange={setCurrentSection}
         />
         <div className="flex flex-1">
           <MainNavigation 
-            currentSection={currentSection}
+            activeSection={currentSection}
             onSectionChange={setCurrentSection}
             language={language}
           />
           <main className="flex-1 p-6">
             <ContentRenderer 
-              section={currentSection} 
+              activeSection={currentSection} 
               language={language}
-              onSectionChange={setCurrentSection}
             />
           </main>
         </div>
@@ -75,11 +76,13 @@ function Index() {
       <MainHeader 
         language={language} 
         onLanguageChange={setLanguage}
+        activeSection={currentSection}
+        onSectionChange={setCurrentSection}
       />
       
       <div className="flex flex-1">
         <MainNavigation 
-          currentSection={currentSection}
+          activeSection={currentSection}
           onSectionChange={setCurrentSection}
           language={language}
         />

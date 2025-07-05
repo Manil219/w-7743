@@ -7,13 +7,14 @@ import { ProcedureDetailView } from "@/components/procedures/ProcedureDetailView
 import { ProcedureFormView } from "@/components/procedures/ProcedureFormView";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { ClipboardList } from "lucide-react";
-import { mockProcedures } from "@/components/procedures/mockData";
 
 export function AdministrativeProcedures() {
   const [selectedProcedure, setSelectedProcedure] = useState<AdministrativeProcedure | null>(null);
   const [currentView, setCurrentView] = useState<'list' | 'detail' | 'form'>('list');
   const [showSummaryModal, setShowSummaryModal] = useState(false);
   const [lastAddedProcedure, setLastAddedProcedure] = useState<any>(null);
+
+  console.log('AdministrativeProcedures rendered, currentView:', currentView);
 
   const handleProcedureSubmit = (data: any) => {
     console.log('Procedure submitted:', data);
@@ -23,11 +24,13 @@ export function AdministrativeProcedures() {
   };
 
   const handleAddAnotherProcedure = () => {
+    console.log('Add another procedure clicked');
     setShowSummaryModal(false);
     setCurrentView('form');
   };
 
   const handleCloseSummary = () => {
+    console.log('Close summary clicked');
     setShowSummaryModal(false);
     setLastAddedProcedure(null);
   };
@@ -38,19 +41,25 @@ export function AdministrativeProcedures() {
   };
 
   if (currentView === 'form') {
+    console.log('Rendering form view');
     return (
       <ProcedureFormView 
-        onBack={() => setCurrentView('list')}
+        onBack={() => {
+          console.log('Back to list from form');
+          setCurrentView('list');
+        }}
         onSubmit={handleProcedureSubmit}
       />
     );
   }
 
   if (currentView === 'detail' && selectedProcedure) {
+    console.log('Rendering detail view for procedure:', selectedProcedure.id);
     return (
       <ProcedureDetailView 
         procedure={selectedProcedure}
         onBack={() => {
+          console.log('Back to list from detail');
           setSelectedProcedure(null);
           setCurrentView('list');
         }}
@@ -58,6 +67,7 @@ export function AdministrativeProcedures() {
     );
   }
 
+  console.log('Rendering list view');
   return (
     <div className="space-y-6">
       <SectionHeader
@@ -69,7 +79,10 @@ export function AdministrativeProcedures() {
       
       <ProceduresTabs 
         section="procedures-catalog" 
-        onAddProcedure={() => setCurrentView('form')}
+        onAddProcedure={() => {
+          console.log('Add procedure clicked');
+          setCurrentView('form');
+        }}
         onOpenApprovalQueue={handleOpenApprovalQueue}
       />
       

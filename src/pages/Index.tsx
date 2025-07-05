@@ -7,11 +7,13 @@ import { Footer } from '@/components/Footer';
 import { StatsGrid } from '@/components/dashboard/StatsGrid';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, ClipboardList, Search, BookOpen, Users, Settings } from 'lucide-react';
+import { FileText, ClipboardList, Search, BookOpen, Users } from 'lucide-react';
 
 function Index() {
   const [currentSection, setCurrentSection] = useState('dashboard');
   const [language, setLanguage] = useState('fr');
+
+  console.log('Index component rendered, currentSection:', currentSection);
 
   const quickActions = [
     {
@@ -45,6 +47,7 @@ function Index() {
   ];
 
   if (currentSection !== 'dashboard') {
+    console.log('Rendering non-dashboard section:', currentSection);
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <MainHeader 
@@ -71,6 +74,7 @@ function Index() {
     );
   }
 
+  console.log('Rendering dashboard section');
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <MainHeader 
@@ -109,7 +113,10 @@ function Index() {
             <h2 className="text-xl font-semibold mb-4">Actions rapides</h2>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {quickActions.map((action, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer" onClick={action.action}>
+                <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => {
+                  console.log('Quick action clicked:', action.title);
+                  action.action();
+                }}>
                   <CardHeader className="pb-3">
                     <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mb-3`}>
                       <action.icon className="w-6 h-6" />
@@ -137,7 +144,10 @@ function Index() {
                   <p className="text-gray-600 mb-4">
                     Votre activité récente apparaîtra ici une fois que vous commencerez à utiliser la plateforme.
                   </p>
-                  <Button onClick={() => setCurrentSection('legal-search')}>
+                  <Button onClick={() => {
+                    console.log('Start search button clicked');
+                    setCurrentSection('legal-search');
+                  }}>
                     Commencer une recherche
                   </Button>
                 </div>

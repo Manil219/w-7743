@@ -2,27 +2,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Database } from '@/integrations/supabase/types';
 
-interface Procedure {
-  id: string;
-  title: string;
-  category: string;
-  description?: string;
-  institution: string;
-  duration?: string;
-  difficulty?: string;
-  cost?: string;
-  status?: string;
-  required_documents?: string[];
-  tags?: string[];
-  forms?: any;
-  steps?: any;
-  rating?: number;
-  completed_count?: number;
-  created_at?: string;
-  updated_at?: string;
-  created_by?: string;
-}
+type Procedure = Database['public']['Tables']['administrative_procedures']['Row'];
+type ProcedureInsert = Database['public']['Tables']['administrative_procedures']['Insert'];
+type ProcedureUpdate = Database['public']['Tables']['administrative_procedures']['Update'];
 
 export function useProcedures() {
   const { toast } = useToast();
@@ -54,7 +38,7 @@ export function useProcedures() {
     }
   };
 
-  const createProcedure = async (procedureData: Partial<Procedure>) => {
+  const createProcedure = async (procedureData: ProcedureInsert) => {
     try {
       const { data, error } = await supabase
         .from('administrative_procedures')
@@ -82,7 +66,7 @@ export function useProcedures() {
     }
   };
 
-  const updateProcedure = async (id: string, updates: Partial<Procedure>) => {
+  const updateProcedure = async (id: string, updates: ProcedureUpdate) => {
     try {
       const { data, error } = await supabase
         .from('administrative_procedures')

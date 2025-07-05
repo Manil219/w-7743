@@ -5,9 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider, useAuth } from '@/components/auth/AuthProvider';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
-import { Index } from '@/pages/Index';
-import { Auth } from '@/pages/Auth';
-import { NotFound } from '@/pages/NotFound';
+import Index from '@/pages/Index';
+import Auth from '@/pages/Auth';
+import NotFound from '@/pages/NotFound';
 import './App.css';
 
 const queryClient = new QueryClient();

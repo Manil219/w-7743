@@ -2,6 +2,8 @@
 import React from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 
-export function Auth() {
+function Auth() {
   return <LoginForm />;
 }
+
+export default Auth;

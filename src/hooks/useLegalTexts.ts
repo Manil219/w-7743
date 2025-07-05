@@ -2,25 +2,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import type { Database } from '@/integrations/supabase/types';
 
-interface LegalText {
-  id: string;
-  title: string;
-  type: string;
-  category: string;
-  sector?: string;
-  institution?: string;
-  description?: string;
-  content?: string;
-  journal_number?: string;
-  journal_date?: string;
-  page_number?: string;
-  status: string;
-  tags?: string[];
-  created_at?: string;
-  updated_at?: string;
-  created_by?: string;
-}
+type LegalText = Database['public']['Tables']['legal_texts']['Row'];
+type LegalTextInsert = Database['public']['Tables']['legal_texts']['Insert'];
+type LegalTextUpdate = Database['public']['Tables']['legal_texts']['Update'];
 
 export function useLegalTexts() {
   const { toast } = useToast();
@@ -69,7 +55,7 @@ export function useLegalTexts() {
     }
   };
 
-  const createText = async (textData: Partial<LegalText>) => {
+  const createText = async (textData: LegalTextInsert) => {
     try {
       const { data, error } = await supabase
         .from('legal_texts')
@@ -97,7 +83,7 @@ export function useLegalTexts() {
     }
   };
 
-  const updateText = async (id: string, updates: Partial<LegalText>) => {
+  const updateText = async (id: string, updates: LegalTextUpdate) => {
     try {
       const { data, error } = await supabase
         .from('legal_texts')

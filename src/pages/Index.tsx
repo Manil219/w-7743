@@ -1,128 +1,152 @@
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { MainNavigation } from "@/components/MainNavigation";
-import { Footer } from "@/components/Footer";
-import { BreadcrumbNavigation } from "@/components/BreadcrumbNavigation";
-import { GovernmentHeader } from "@/components/layout/GovernmentHeader";
-import { MainHeader } from "@/components/layout/MainHeader";
-import { ContentRenderer } from "@/components/layout/ContentRenderer";
+import React, { useState } from 'react';
+import { MainHeader } from '@/components/layout/MainHeader';
+import { MainNavigation } from '@/components/MainNavigation';
+import { ContentRenderer } from '@/components/layout/ContentRenderer';
+import { Footer } from '@/components/Footer';
+import { StatsGrid } from '@/components/dashboard/StatsGrid';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { FileText, ClipboardList, Search, BookOpen, Users, Settings } from 'lucide-react';
 
-const VALID_SECTIONS = new Set([
-  "dashboard", "legal-catalog", "legal-enrichment", "legal-search",
-  "procedures-catalog", "procedures-enrichment", "procedures-search", "procedures-resources",
-  "dashboards", "analysis", "reports", "assisted-writing",
-  "forum", "collaborative-workspace", "shared-resources",
-  "news", "library", "dictionaries", "directories",
-  "nomenclature", "complementary-resources", "data-management", "alerts-notifications", "user-management",
-  "security", "mobile-app", "accessibility-settings", "offline-mode",
-  "about", "contact", "technical-support", "ai-search", "favorites",
-  "data-extraction", "document-templates", "advanced-search", "saved-searches"
-]);
+function Index() {
+  const [currentSection, setCurrentSection] = useState('dashboard');
+  const [language, setLanguage] = useState('fr');
 
-const Index = () => {
-  const [activeSection, setActiveSection] = useState("dashboard");
-  const [language, setLanguage] = useState("fr");
+  const quickActions = [
+    {
+      title: 'Rechercher un texte juridique',
+      description: 'Trouvez rapidement les textes de loi dont vous avez besoin',
+      icon: Search,
+      action: () => setCurrentSection('legal-search'),
+      color: 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100',
+    },
+    {
+      title: 'Consulter les procédures',
+      description: 'Explorez les procédures administratives disponibles',
+      icon: ClipboardList,
+      action: () => setCurrentSection('procedures-catalog'),
+      color: 'bg-blue-50 text-blue-600 hover:bg-blue-100',
+    },
+    {
+      title: 'Ajouter un texte juridique',
+      description: 'Contribuez à enrichir la base de données juridiques',
+      icon: FileText,
+      action: () => setCurrentSection('legal-enrichment'),
+      color: 'bg-purple-50 text-purple-600 hover:bg-purple-100',
+    },
+    {
+      title: 'Mes recherches sauvegardées',
+      description: 'Accédez à vos recherches et favoris',
+      icon: BookOpen,
+      action: () => setCurrentSection('saved-searches'),
+      color: 'bg-orange-50 text-orange-600 hover:bg-orange-100',
+    },
+  ];
 
-  // Validation de section avec callback mémorisé
-  const handleSectionChange = useCallback((section: string) => {
-    if (VALID_SECTIONS.has(section)) {
-      setActiveSection(section);
-    } else {
-      console.warn(`Section invalide tentée: ${section}`);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleNavigateToSection = (event: CustomEvent) => {
-      console.log('Navigation event received:', event.detail);
-      const targetSection = event.detail;
-      
-      if (typeof targetSection === 'string' && VALID_SECTIONS.has(targetSection)) {
-        setActiveSection(targetSection);
-        
-        // Amélioration de l'accessibilité - annoncer le changement de section
-        const announcement = document.createElement('div');
-        announcement.setAttribute('aria-live', 'polite');
-        announcement.setAttribute('aria-atomic', 'true');
-        announcement.className = 'sr-only';
-        announcement.textContent = `Navigation vers la section: ${targetSection}`;
-        document.body.appendChild(announcement);
-        
-        // Nettoyer l'annonce après un délai
-        setTimeout(() => {
-          document.body.removeChild(announcement);
-        }, 1000);
-      } else {
-        console.warn(`Section invalide reçue via événement: ${targetSection}`);
-      }
-    };
-
-    window.addEventListener('navigate-to-section', handleNavigateToSection as EventListener);
-
-    return () => {
-      window.removeEventListener('navigate-to-section', handleNavigateToSection as EventListener);
-    };
-  }, []);
-
-  // Gestionnaire de changement de langue mémorisé
-  const handleLanguageChange = useCallback((newLanguage: string) => {
-    setLanguage(newLanguage);
-  }, []);
-
-  // Props mémorisées pour éviter les re-rendus inutiles
-  const headerProps = useMemo(() => ({
-    language,
-    activeSection,
-    onLanguageChange: handleLanguageChange,
-    onSectionChange: handleSectionChange
-  }), [language, activeSection, handleLanguageChange, handleSectionChange]);
-
-  const navigationProps = useMemo(() => ({
-    onSectionChange: handleSectionChange,
-    activeSection,
-    language
-  }), [handleSectionChange, activeSection, language]);
-
-  const breadcrumbProps = useMemo(() => ({
-    currentSection: activeSection,
-    onSectionChange: handleSectionChange,
-    language
-  }), [activeSection, handleSectionChange, language]);
+  if (currentSection !== 'dashboard') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <MainHeader 
+          language={language} 
+          onLanguageChange={setLanguage}
+        />
+        <div className="flex flex-1">
+          <MainNavigation 
+            currentSection={currentSection}
+            onSectionChange={setCurrentSection}
+            language={language}
+          />
+          <main className="flex-1 p-6">
+            <ContentRenderer 
+              section={currentSection} 
+              language={language}
+              onSectionChange={setCurrentSection}
+            />
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen w-full algerian-green-bg flex flex-col">
-      {/* Skip to main content link pour l'accessibilité */}
-      <a 
-        href="#main-content" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-blue-600 text-white p-2 z-50"
-      >
-        Aller au contenu principal
-      </a>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <MainHeader 
+        language={language} 
+        onLanguageChange={setLanguage}
+      />
+      
+      <div className="flex flex-1">
+        <MainNavigation 
+          currentSection={currentSection}
+          onSectionChange={setCurrentSection}
+          language={language}
+        />
+        
+        <main className="flex-1 p-6 space-y-6">
+          {/* Welcome Section */}
+          <div className="bg-gradient-to-r from-emerald-600 to-blue-600 rounded-lg p-6 text-white">
+            <h1 className="text-2xl font-bold mb-2">
+              Bienvenue sur DALIL - Guide Algérien du Droit et des Procédures Administratives
+            </h1>
+            <p className="text-emerald-50">
+              Votre plateforme centralisée pour accéder aux textes juridiques algériens et aux procédures administratives.
+            </p>
+          </div>
 
-      {/* Header gouvernemental */}
-      <GovernmentHeader language={language} onLanguageChange={handleLanguageChange} />
+          {/* Statistics */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Aperçu de la plateforme</h2>
+            <StatsGrid />
+          </div>
 
-      {/* Header principal */}
-      <MainHeader {...headerProps} />
+          {/* Quick Actions */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Actions rapides</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {quickActions.map((action, index) => (
+                <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer" onClick={action.action}>
+                  <CardHeader className="pb-3">
+                    <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mb-3`}>
+                      <action.icon className="w-6 h-6" />
+                    </div>
+                    <CardTitle className="text-sm">{action.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <CardDescription className="text-xs">
+                      {action.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
 
-      {/* Menu de navigation principal - Hidden on mobile */}
-      <div className="hidden md:block">
-        <MainNavigation {...navigationProps} />
+          {/* Recent Activity */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Activité récente</h2>
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Commencez à explorer</h3>
+                  <p className="text-gray-600 mb-4">
+                    Votre activité récente apparaîtra ici une fois que vous commencerez à utiliser la plateforme.
+                  </p>
+                  <Button onClick={() => setCurrentSection('legal-search')}>
+                    Commencer une recherche
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
-
-      <BreadcrumbNavigation {...breadcrumbProps} />
-
-      {/* Main Content avec landmark ARIA */}
-      <main id="main-content" className="flex-grow bg-gray-50" role="main" aria-label="Contenu principal">
-        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
-          <ContentRenderer activeSection={activeSection} language={language} />
-        </div>
-      </main>
-
-      {/* Footer */}
-      <Footer onSectionChange={handleSectionChange} />
+      
+      <Footer />
     </div>
   );
-};
+}
 
 export default Index;

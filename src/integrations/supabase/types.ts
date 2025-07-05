@@ -72,6 +72,118 @@ export type Database = {
         }
         Relationships: []
       }
+      approval_queue: {
+        Row: {
+          id: string
+          item_id: string
+          item_type: string
+          reviewed_at: string | null
+          reviewer_comments: string | null
+          reviewer_id: string | null
+          status: string | null
+          submitted_at: string | null
+          submitted_by: string | null
+        }
+        Insert: {
+          id?: string
+          item_id: string
+          item_type: string
+          reviewed_at?: string | null
+          reviewer_comments?: string | null
+          reviewer_id?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
+        }
+        Update: {
+          id?: string
+          item_id?: string
+          item_type?: string
+          reviewed_at?: string | null
+          reviewer_comments?: string | null
+          reviewer_id?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          submitted_by?: string | null
+        }
+        Relationships: []
+      }
+      legal_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          order_index: number | null
+          parent_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          order_index?: number | null
+          parent_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          order_index?: number | null
+          parent_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "legal_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legal_text_versions: {
+        Row: {
+          changes_summary: string | null
+          content: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          legal_text_id: string | null
+          version_number: number
+        }
+        Insert: {
+          changes_summary?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          legal_text_id?: string | null
+          version_number: number
+        }
+        Update: {
+          changes_summary?: string | null
+          content?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          legal_text_id?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legal_text_versions_legal_text_id_fkey"
+            columns: ["legal_text_id"]
+            isOneToOne: false
+            referencedRelation: "legal_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legal_texts: {
         Row: {
           category: string
@@ -159,38 +271,150 @@ export type Database = {
         }
         Relationships: []
       }
+      procedure_documents: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          document_name: string
+          document_type: string | null
+          id: string
+          is_required: boolean | null
+          procedure_id: string | null
+          template_url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          document_name: string
+          document_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          procedure_id?: string | null
+          template_url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          document_name?: string
+          document_type?: string | null
+          id?: string
+          is_required?: boolean | null
+          procedure_id?: string | null
+          template_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procedure_documents_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "administrative_procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      procedure_steps: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          duration_estimate: string | null
+          id: string
+          is_required: boolean | null
+          procedure_id: string | null
+          required_documents: string[] | null
+          step_number: number
+          tips: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          duration_estimate?: string | null
+          id?: string
+          is_required?: boolean | null
+          procedure_id?: string | null
+          required_documents?: string[] | null
+          step_number: number
+          tips?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          duration_estimate?: string | null
+          id?: string
+          is_required?: boolean | null
+          procedure_id?: string | null
+          required_documents?: string[] | null
+          step_number?: number
+          tips?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procedure_steps_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "administrative_procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
+          avatar_url: string | null
+          bio: string | null
           created_at: string | null
           department: string | null
           email: string | null
           first_name: string | null
           id: string
+          is_active: boolean | null
+          language_preference: string | null
           last_name: string | null
+          organization: string | null
+          phone: string | null
+          position: string | null
           preferences: Json | null
           role: string | null
+          specializations: string[] | null
           updated_at: string | null
         }
         Insert: {
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           department?: string | null
           email?: string | null
           first_name?: string | null
           id: string
+          is_active?: boolean | null
+          language_preference?: string | null
           last_name?: string | null
+          organization?: string | null
+          phone?: string | null
+          position?: string | null
           preferences?: Json | null
           role?: string | null
+          specializations?: string[] | null
           updated_at?: string | null
         }
         Update: {
+          avatar_url?: string | null
+          bio?: string | null
           created_at?: string | null
           department?: string | null
           email?: string | null
           first_name?: string | null
           id?: string
+          is_active?: boolean | null
+          language_preference?: string | null
           last_name?: string | null
+          organization?: string | null
+          phone?: string | null
+          position?: string | null
           preferences?: Json | null
           role?: string | null
+          specializations?: string[] | null
           updated_at?: string | null
         }
         Relationships: []
@@ -221,6 +445,145 @@ export type Database = {
           query?: string
           results_count?: number | null
           section?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      text_annotations: {
+        Row: {
+          annotation_type: string | null
+          content: string
+          created_at: string | null
+          id: string
+          is_public: boolean | null
+          legal_text_id: string | null
+          position_end: number | null
+          position_start: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          annotation_type?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          is_public?: boolean | null
+          legal_text_id?: string | null
+          position_end?: number | null
+          position_start?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          annotation_type?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          is_public?: boolean | null
+          legal_text_id?: string | null
+          position_end?: number | null
+          position_start?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "text_annotations_legal_text_id_fkey"
+            columns: ["legal_text_id"]
+            isOneToOne: false
+            referencedRelation: "legal_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string | null
+          id: string
+          item_id: string
+          item_type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          item_id: string
+          item_type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          item_id?: string
+          item_type?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_procedure_progress: {
+        Row: {
+          completed_at: string | null
+          current_step: number | null
+          id: string
+          notes: string | null
+          procedure_id: string | null
+          started_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          notes?: string | null
+          procedure_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          current_step?: number | null
+          id?: string
+          notes?: string | null
+          procedure_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_procedure_progress_procedure_id_fkey"
+            columns: ["procedure_id"]
+            isOneToOne: false
+            referencedRelation: "administrative_procedures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_sessions: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_activity: string | null
+          session_data: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_activity?: string | null
+          session_data?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_activity?: string | null
+          session_data?: Json | null
           user_id?: string | null
         }
         Relationships: []

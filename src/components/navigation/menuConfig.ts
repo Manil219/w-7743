@@ -92,6 +92,7 @@ export const menuItems = [
       { label: "Alertes & Notifications", section: "alerts-notifications" },
       { label: "Gestion utilisateurs", section: "user-management" },
       { label: "Sécurité", section: "security" },
+      { label: "Intégrations et Interopérabilité", section: "integrations-interoperability" },
       { label: "Personnes à mobilité réduite", section: "accessibility-settings" },
       { label: "Mode hors-ligne", section: "offline-mode" },
       { label: "Version mobile native", section: "mobile-app" }
